@@ -1,4 +1,4 @@
-import type { SessionConfig, SessionDriver } from "../types";
+import type { SessionConfig, SessionDriver } from "./types";
 
 /**
  * Session class.
@@ -185,6 +185,11 @@ export class SessionManager {
      * The session driver.
      */
     private driver: SessionDriver;
+
+    /**
+     * Session configuration.
+     */
+    private config: SessionConfig;
 
     /**
      * Create a new session manager.
