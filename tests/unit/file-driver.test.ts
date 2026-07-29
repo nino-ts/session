@@ -58,4 +58,14 @@ describe("FileDriver", () => {
         const result = await driver.read("session-no-expiry");
         expect(result).toEqual(data);
     });
+
+    test("should garbage collect expired session files", async () => {
+        await driver.write("gc-expired", { _expiresAt: Date.now() - 1000, user: "old" });
+        await driver.write("gc-valid", { user: "new" });
+
+        const collected = await driver.gc(0);
+        expect(collected).toBe(1);
+        expect(await driver.read("gc-expired")).toBeNull();
+        expect(await driver.read("gc-valid")).toEqual({ user: "new" });
+    });
 });

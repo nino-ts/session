@@ -34,6 +34,11 @@ describe("CookieDriver", () => {
         expect(result).toBe(true);
     });
 
+    test("should no-op garbage collect", async () => {
+        const driver = new CookieDriver();
+        expect(await driver.gc(120)).toBe(0);
+    });
+
     test("should serialize to cookie string", () => {
         const driver = new CookieDriver();
         const result = driver.toCookieString(
