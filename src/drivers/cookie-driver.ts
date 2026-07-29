@@ -60,6 +60,16 @@ export class CookieDriver implements SessionDriver {
     }
 
     /**
+     * Cookie sessions are request-scoped; nothing to garbage-collect.
+     *
+     * @param _maxLifetime - Unused
+     * @returns Always 0
+     */
+    public async gc(_maxLifetime: number): Promise<number> {
+        return 0;
+    }
+
+    /**
      * Serialize session data to cookie string.
      *
      * @param data - The session data

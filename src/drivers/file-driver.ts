@@ -101,9 +101,35 @@ export class FileDriver implements SessionDriver {
      */
     public async exists(id: string): Promise<boolean> {
         try {
-            return await Bun.file(this.filePath(id)).exists();
+            const data = await this.read(id);
+            return data !== null;
         } catch {
             return false;
         }
+    }
+
+    /**
+     * Garbage-collect expired session files in the storage directory.
+     *
+     * @param maxLifetime - Unused for absolute `_expiresAt`; kept for SessionDriver parity
+     * @returns Number of files removed
+     */
+    public async gc(_maxLifetime: number): Promise<number> {
+        let removed = 0;
+        const glob = new Bun.Glob("*.json");
+
+        for await (const relative of glob.scan({ cwd: this.directory, onlyFiles: true })) {
+            const id = relative.replace(/\.json$/, "");
+            const before = await Bun.file(this.filePath(id)).exists();
+            if (!before) {
+                continue;
+            }
+            const data = await this.read(id);
+            if (data === null && !(await Bun.file(this.filePath(id)).exists())) {
+                removed += 1;
+            }
+        }
+
+        return removed;
     }
 }
