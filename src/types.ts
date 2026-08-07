@@ -1,14 +1,15 @@
 /**
  * Session driver contract.
  *
- * Unified seam for file, cookie, and database drivers:
+ * Unified seam for file, cookie, database, and redis drivers:
  * - `read` returns `null` when missing/expired (session package idiom)
  * - `exists` for presence checks
- * - `gc` for expired-session cleanup (database/file; cookie is a no-op)
+ * - `gc` for expired-session cleanup (database/file; cookie/redis are no-ops —
+ *   redis relies on key TTL)
  *
- * Lifetime for drivers that persist expiration (database) is configured on the
- * driver instance — not on every `write` — so `Session` / `SessionManager` stay
- * driver-agnostic.
+ * Lifetime for drivers that persist expiration (database/redis) is configured on
+ * the driver instance — not on every `write` — so `Session` / `SessionManager`
+ * stay driver-agnostic.
  */
 export interface SessionDriver {
     /**
@@ -63,7 +64,7 @@ export interface SessionConfig {
      *
      * @default 'cookie'
      */
-    driver: "cookie" | "file" | "database";
+    driver: "cookie" | "file" | "database" | "redis";
 
     /**
      * Session lifetime in minutes.

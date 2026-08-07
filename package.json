@@ -3,7 +3,7 @@
   "main": "index.ts",
   "module": "index.ts",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Bun-native session management with multiple drivers for Ninots Framework",
   "author": "Ninots Framework",
   "keywords": [
@@ -11,7 +11,8 @@
     "session",
     "cookie",
     "file",
-    "database"
+    "database",
+    "redis"
   ],
   "license": "MIT",
   "scripts": {
